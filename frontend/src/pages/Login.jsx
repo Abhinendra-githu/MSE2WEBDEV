@@ -19,7 +19,14 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to login');
+      const message =
+        err.response?.data?.message ||
+        (err.code === 'ECONNABORTED'
+          ? 'Request timed out. The backend server might be waking up (Render free tier spin-up can take ~50s). Please try again in a moment.'
+          : err.message === 'Network Error'
+          ? 'Network Error: Cannot reach backend server. Please verify VITE_API_URL or check if backend is online.'
+          : err.message || 'Failed to login');
+      setError(message);
     } finally {
       setLoading(false);
     }

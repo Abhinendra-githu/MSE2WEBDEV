@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 import { Search, Plus, Trash2, Edit2, X } from 'lucide-react';
 
@@ -17,18 +17,13 @@ const Dashboard = () => {
   });
   const [editingId, setEditingId] = useState(null);
 
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: { Authorization: `Bearer ${user.token}` }
-  });
-
   const fetchGrievances = async () => {
     try {
       setLoading(true);
       const res = await api.get('/grievances');
       setGrievances(res.data);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching grievances:', err);
     } finally {
       setLoading(false);
     }

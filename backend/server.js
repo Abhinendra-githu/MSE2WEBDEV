@@ -21,7 +21,18 @@ app.use('/api/grievances', require('./routes/grievance'));
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.send('Student Grievance API is running...');
+  res.json({
+    status: 'online',
+    message: 'Student Grievance API is running...',
+    version: '1.0.0'
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString()
+  });
 });
 
 app.listen(port, () => {
