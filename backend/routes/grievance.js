@@ -5,15 +5,18 @@ const {
   getGrievanceById,
   createGrievance,
   updateGrievance,
+  updateGrievanceStatus,
   deleteGrievance,
-  searchGrievances
+  searchGrievances,
+  getGrievanceStats
 } = require('../controllers/grievanceController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
 
-// The order of routes matters. /search must be defined before /:id 
-// otherwise 'search' will be treated as an id parameter.
+// Specific routes before parameterized :id routes
+router.route('/stats').get(protect, adminOnly, getGrievanceStats);
 router.route('/search').get(protect, searchGrievances);
 
+// Main CRUD routes
 router.route('/')
   .get(protect, getGrievances)
   .post(protect, createGrievance);
@@ -22,5 +25,9 @@ router.route('/:id')
   .get(protect, getGrievanceById)
   .put(protect, updateGrievance)
   .delete(protect, deleteGrievance);
+
+// Admin resolution endpoint
+router.route('/:id/status')
+  .put(protect, adminOnly, updateGrievanceStatus);
 
 module.exports = router;

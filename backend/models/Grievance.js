@@ -20,8 +20,19 @@ const grievanceSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Resolved'],
+    enum: ['Pending', 'In Progress', 'Resolved', 'Rejected'],
     default: 'Pending'
+  },
+  adminRemark: {
+    type: String,
+    default: ''
+  },
+  resolvedAt: {
+    type: Date
+  },
+  resolvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Student'
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

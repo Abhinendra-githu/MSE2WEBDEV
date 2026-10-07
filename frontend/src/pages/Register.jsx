@@ -1,12 +1,13 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, GraduationCap, ShieldCheck } from 'lucide-react';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useContext(AuthContext);
@@ -17,8 +18,12 @@ const Register = () => {
     setError('');
     setLoading(true);
     try {
-      await register(name, email, password);
-      navigate('/');
+      const newUser = await register(name, email, password, role);
+      if (newUser?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       const message =
         err.response?.data?.message ||
@@ -39,32 +44,52 @@ const Register = () => {
         <div className="auth-header">
           <UserPlus className="auth-icon" />
           <h2>Create Account</h2>
-          <p>Register to submit grievances</p>
+          <p>Join the student grievance resolution platform</p>
         </div>
         
         {error && <div className="alert alert-error">{error}</div>}
+
+        {/* Role Selector Tabs */}
+        <div className="role-selector">
+          <button
+            type="button"
+            className={`role-tab ${role === 'student' ? 'active' : ''}`}
+            onClick={() => setRole('student')}
+          >
+            <GraduationCap size={18} />
+            <span>Student</span>
+          </button>
+          <button
+            type="button"
+            className={`role-tab ${role === 'admin' ? 'active' : ''}`}
+            onClick={() => setRole('admin')}
+          >
+            <ShieldCheck size={18} />
+            <span>Grievance Officer</span>
+          </button>
+        </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Full Name</label>
             <input
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder="Enter your full name"
+              placeholder="e.g. Alex Johnson"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email Address</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
+              placeholder={role === 'admin' ? 'officer@institution.edu' : 'student@institution.edu'}
             />
           </div>
           <div className="form-group">
@@ -75,11 +100,12 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Create a password"
+              placeholder="Create a strong password"
             />
           </div>
+
           <button type="submit" className="btn-primary w-full" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Registering...' : `Register as ${role === 'admin' ? 'Officer / Admin' : 'Student'}`}
           </button>
         </form>
         
