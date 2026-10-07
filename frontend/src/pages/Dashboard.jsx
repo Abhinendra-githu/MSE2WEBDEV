@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 import { Search, Plus, Trash2, Edit2, X, MessageSquare, ShieldCheck, CheckCircle2 } from 'lucide-react';
@@ -9,6 +9,10 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
+
+  if (user?.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
 
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({

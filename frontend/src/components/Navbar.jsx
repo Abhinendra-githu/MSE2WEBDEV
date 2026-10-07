@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
+        <Link to={user?.role === 'admin' ? '/admin' : '/'} className="navbar-logo">
           <GraduationCap className="logo-icon" />
           <span>SGMS</span>
         </Link>
@@ -25,22 +25,13 @@ const Navbar = () => {
           {user ? (
             <>
               {user.role === 'admin' ? (
-                <>
-                  <Link 
-                    to="/admin" 
-                    className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}
-                  >
-                    <LayoutDashboard size={16} />
-                    <span>Management Portal</span>
-                  </Link>
-                  <Link 
-                    to="/" 
-                    className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-                  >
-                    <FileText size={16} />
-                    <span>My Grievances</span>
-                  </Link>
-                </>
+                <Link 
+                  to="/admin" 
+                  className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}
+                >
+                  <LayoutDashboard size={16} />
+                  <span>Management Portal</span>
+                </Link>
               ) : (
                 <Link 
                   to="/" 
