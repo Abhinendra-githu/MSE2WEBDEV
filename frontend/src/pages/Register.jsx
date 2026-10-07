@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { UserPlus, GraduationCap, ShieldCheck } from 'lucide-react';
+import { UserPlus, GraduationCap, ShieldCheck, CheckCircle2, User, Mail, Lock, Sparkles } from 'lucide-react';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -40,77 +40,125 @@ const Register = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
+      <div className="auth-card auth-card-wide">
         <div className="auth-header">
-          <UserPlus className="auth-icon" />
+          <div className="auth-icon-badge">
+            <UserPlus size={26} />
+          </div>
           <h2>Create Account</h2>
-          <p>Join the student grievance resolution platform</p>
+          <p>Join the student grievance management & resolution platform</p>
         </div>
         
         {error && <div className="alert alert-error">{error}</div>}
 
-        {/* Role Selector Tabs */}
-        <div className="role-selector">
-          <button
-            type="button"
-            className={`role-tab ${role === 'student' ? 'active' : ''}`}
-            onClick={() => setRole('student')}
-          >
-            <GraduationCap size={18} />
-            <span>Student</span>
-          </button>
-          <button
-            type="button"
-            className={`role-tab ${role === 'admin' ? 'active' : ''}`}
-            onClick={() => setRole('admin')}
-          >
-            <ShieldCheck size={18} />
-            <span>Grievance Officer</span>
-          </button>
+        {/* Visual Role Selector Grid */}
+        <div className="role-selection-wrapper">
+          <label className="role-selection-label">Select Account Type</label>
+          <div className="role-grid">
+            <div
+              className={`role-card-option ${role === 'student' ? 'selected' : ''}`}
+              onClick={() => setRole('student')}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="role-card-icon-wrap student-icon">
+                <GraduationCap size={22} />
+              </div>
+              <div className="role-card-info">
+                <span className="role-card-title">Student</span>
+                <span className="role-card-desc">Lodge & track issues</span>
+              </div>
+              {role === 'student' && (
+                <div className="role-card-check">
+                  <CheckCircle2 size={16} />
+                </div>
+              )}
+            </div>
+
+            <div
+              className={`role-card-option ${role === 'admin' ? 'selected' : ''}`}
+              onClick={() => setRole('admin')}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="role-card-icon-wrap officer-icon">
+                <ShieldCheck size={22} />
+              </div>
+              <div className="role-card-info">
+                <span className="role-card-title">Grievance Resolver</span>
+                <span className="role-card-desc">Review & resolve cases</span>
+              </div>
+              {role === 'admin' && (
+                <div className="role-card-check">
+                  <CheckCircle2 size={16} />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="e.g. Alex Johnson"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder={role === 'admin' ? 'officer@institution.edu' : 'student@institution.edu'}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Create a strong password"
-            />
+            <div className="input-with-icon">
+              <User size={18} className="input-icon" />
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder={role === 'admin' ? 'e.g. Dr. Arthur Miller (Officer)' : 'e.g. Alex Johnson'}
+              />
+            </div>
           </div>
 
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
-            {loading ? 'Registering...' : `Register as ${role === 'admin' ? 'Officer / Admin' : 'Student'}`}
+          <div className="form-group">
+            <label htmlFor="email">Official Email Address</label>
+            <div className="input-with-icon">
+              <Mail size={18} className="input-icon" />
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder={role === 'admin' ? 'resolver@institution.edu' : 'student@institution.edu'}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <div className="input-with-icon">
+              <Lock size={18} className="input-icon" />
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Create a secure password"
+              />
+            </div>
+          </div>
+
+          <button type="submit" className="btn-primary w-full btn-auth-submit" disabled={loading}>
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="mini-spinner"></span> Registering...
+              </span>
+            ) : (
+              <>
+                <Sparkles size={17} />
+                <span>Register as {role === 'admin' ? 'Grievance Resolver' : 'Student'}</span>
+              </>
+            )}
           </button>
         </form>
         
         <p className="auth-footer">
-          Already have an account? <Link to="/login">Login here</Link>
+          Already have an account? <Link to="/login">Sign in here &rarr;</Link>
         </p>
       </div>
     </div>

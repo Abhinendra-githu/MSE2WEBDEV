@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { LogIn } from 'lucide-react';
+import { LogIn, Mail, Lock, ShieldCheck, GraduationCap } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,43 +40,71 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <LogIn className="auth-icon" />
+          <div className="auth-icon-badge">
+            <LogIn size={26} />
+          </div>
           <h2>Welcome Back</h2>
-          <p>Login to manage your grievances</p>
+          <p>Login to access your grievance portal</p>
         </div>
         
         {error && <div className="alert alert-error">{error}</div>}
+
+        <div className="auth-roles-hint">
+          <div className="role-hint-pill">
+            <GraduationCap size={14} />
+            <span>Students</span>
+          </div>
+          <span className="hint-divider">&bull;</span>
+          <div className="role-hint-pill">
+            <ShieldCheck size={14} />
+            <span>Grievance Resolvers</span>
+          </div>
+        </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Enter your email"
-            />
+            <label htmlFor="email">Email Address</label>
+            <div className="input-with-icon">
+              <Mail size={18} className="input-icon" />
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Enter your registered email"
+              />
+            </div>
           </div>
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-            />
+            <div className="input-with-icon">
+              <Lock size={18} className="input-icon" />
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
           </div>
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+
+          <button type="submit" className="btn-primary w-full btn-auth-submit" disabled={loading}>
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="mini-spinner"></span> Authenticating...
+              </span>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
         
         <p className="auth-footer">
-          Don't have an account? <Link to="/register">Register here</Link>
+          Don't have an account? <Link to="/register">Create an account &rarr;</Link>
         </p>
       </div>
     </div>
